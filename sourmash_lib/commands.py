@@ -506,6 +506,8 @@ def index(args):
                         help='suppress non-error output')
     parser.add_argument('-k', '--ksize', type=int, default=None,
                         help='k-mer size for which to build the SBT.')
+    parser.add_argument('-d', '--n_children', type=int, default=2,
+                        help='Number of children for internal nodes')
     parser.add_argument('--traverse-directory', action='store_true',
                         help='load all signatures underneath this directory.')
     parser.add_argument('--append', action='store_true', default=False,
@@ -523,7 +525,7 @@ def index(args):
         tree = SBT.load(args.sbt_name, leaf_loader=SigLeaf.load)
     else:
         factory = GraphFactory(1, args.bf_size, 4)
-        tree = SBT(factory)
+        tree = SBT(factory, d=args.n_children)
 
     if args.traverse_directory:
         inp_files = list(sourmash_args.traverse_find_sigs(args.signatures))
